@@ -1,5 +1,6 @@
 package io.boxtape.core.configuration
 
+import io.boxtape.withPlaceholdersReplaced
 import org.apache.commons.lang3.text.StrSubstitutor
 
 /**
@@ -11,20 +12,49 @@ import org.apache.commons.lang3.text.StrSubstitutor
  */
 class Configuration {
 
-    private val properties : MutableMap<String,String> = hashMapOf()
+    private val properties: MutableMap<String, String> = hashMapOf()
     val vagrantSettings = VagrantSettings()
     fun registerPropertyWithDefault(propertyName: String, defaultValue: String) {
-        properties.put(propertyName,defaultValue)
+        properties.put(propertyName, defaultValue)
+    }
+
+    fun registerPropertyWithoutValue(propertyName:String) {
+        if (!properties.containsKey(propertyName)) {
+            properties.put(propertyName,"")
+        }
+    }
+
+    fun registerProperty(property: String) {
+        // remove ${ and } at either end
+        val strippedProperty =
+            if (property.startsWith("\${") && property.endsWith("}")) {
+                property.substring(2, property.length() - 1)
+            } else {
+                property
+            }
+        if (strippedProperty.contains(":")) {
+            val keyValue = strippedProperty.splitBy(":")
+            registerPropertyWithDefault(keyValue.get(0), keyValue.get(1))
+        } else {
+            registerPropertyWithoutValue(strippedProperty)
+        }
+    }
+
+    fun getValue(property: String): String? {
+        return properties.get(property).withPlaceholdersReplaced(properties)
+    }
+
+
+    fun hasProperty(property: String): Boolean {
+        return properties.contains(property)
     }
 
     fun asStrings(): List<String> {
-        val substitutor = StrSubstitutor(properties)
-        val strings = properties.map { "${it.key}=${substitutor.replace(it.value)}" }
-        return strings
+        return properties.map { "${it.key}=${it.value.withPlaceholdersReplaced(properties)}" }
     }
 
     fun addForwardedPort(hostPort: String, guestPort: String) {
-        vagrantSettings.addForwardedPort(hostPort,guestPort)
+        vagrantSettings.addForwardedPort(hostPort, guestPort)
     }
 
 

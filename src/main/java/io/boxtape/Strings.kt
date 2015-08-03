@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.google.common.base.Splitter
 import io.boxtape.yaml.PairWriter
+import org.apache.commons.lang3.text.StrSubstitutor
 
 fun String.toPairList(keyValueSeperator:String = ":", itemSeperator:String = ","):List<Pair<String,String>> {
     return Splitter.on(itemSeperator)
@@ -24,4 +25,14 @@ fun Any.asYaml():String {
     module.addSerializer(javaClass<Pair<Any, Any>>(), PairWriter())
     yamlMapper.registerModule(module)
     return yamlMapper.writeValueAsString(this);
+}
+
+fun String?.withPlaceholdersReplaced(replacements:Map<String,String>):String? {
+    if (this == null) {
+        return null;
+    } else {
+        val substitutor = StrSubstitutor(replacements)
+        return substitutor.replace(this)
+    }
+
 }

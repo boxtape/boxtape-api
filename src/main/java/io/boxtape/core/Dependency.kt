@@ -3,7 +3,12 @@ package io.boxtape.core
 import com.github.zafarkhaja.semver.Version
 
 data class Dependency(val groupId: String, val artifactId: String, val version: String) {
-
+    companion object {
+        fun fromName(name:String):Dependency {
+            val parts = name.splitBy(":")
+            return Dependency(parts[0],parts[1],parts[2])
+        }
+    }
     /**
      * Indicates if this dependency matches other.
      *
