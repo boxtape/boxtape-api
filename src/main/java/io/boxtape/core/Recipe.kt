@@ -2,7 +2,7 @@ package io.boxtape.core
 
 import io.boxtape.core.configuration.VagrantSettings
 
-data class Recipie(
+data class Recipe(
     val name: String,
     val resolutions: List<String>,
     val forwardedPorts: List<VagrantSettings.ForwardedPort>,

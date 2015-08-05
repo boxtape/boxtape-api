@@ -57,5 +57,23 @@ class Configuration {
         vagrantSettings.addForwardedPort(hostPort, guestPort)
     }
 
+    fun resolveProperties(source: Map<String, Any>): Map<String,Any> {
+        fun internalResolveProperties(value:Any):Any {
+            return when (value) {
+                    is String -> value.withPlaceholdersReplaced(properties)
+                    is List<*> -> value.map { internalResolveProperties(it as Any) }
+                    is Map<*,*> -> resolveProperties(value as Map<String, Any>)
+                    else -> value
+                }
+        }
+        val result:MutableMap<String,Any> = hashMapOf()
+        val updated = source.map { entry ->
+            val resolved = internalResolveProperties(entry.value)
+            Pair(entry.key,resolved)
+        }
+        result.plusAssign(updated)
+        return result
+    }
+
 
 }

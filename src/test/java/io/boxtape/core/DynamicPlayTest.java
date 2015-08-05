@@ -16,7 +16,7 @@ public class DynamicPlayTest {
     public void canReadFromYaml() throws IOException {
         String yaml = IOUtils.toString(ClassLoader.getSystemResourceAsStream("example.yml"));
         ObjectMapper mapper = Mappers.Yaml.mapper();
-        Recipie play = mapper.readValue(yaml, Recipie.class);
+        Recipe play = mapper.readValue(yaml, Recipe.class);
         assertThat(play.getName(), is("MySql"));
         assertThat(play.getResolutions(), hasSize(1));
         assertThat(play.getForwardedPorts(), hasSize(1));

@@ -2,6 +2,7 @@ package io.boxtape.core.ansible
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
+import io.boxtape.core.configuration.Configuration
 
 public data class AnsibleRole(
     val name: String,
