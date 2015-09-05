@@ -6,11 +6,11 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.google.common.collect.ArrayListMultimap
 import io.boxtape.asYaml
 import io.boxtape.core.configuration.Configuration
-import io.boxtape.core.Dependency
+import io.boxtape.core.LibraryArtifact
 import io.boxtape.yaml.PairWriter
 
 public class PlaybookBuilder(
-    val providers:ArrayListMultimap<Dependency,PlayProvider>,
+    val providers:ArrayListMultimap<LibraryArtifact,PlayProvider>,
     val config: Configuration
 ) {
     fun asYaml(): String {

@@ -3,6 +3,7 @@ package io.boxtape.core.ansible
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.boxtape.asJson
 import io.boxtape.asYaml
 
 
@@ -32,17 +33,10 @@ public data class Playbook(
         return result
     }
 
-//    fun asYaml(): String {
-//        val yamlMapper = ObjectMapper(YAMLFactory())
-//        val module = SimpleModule()
-//        module.addSerializer(javaClass<Pair<Any, Any>>(), PairWriter())
-//        yamlMapper.registerModule(module)
-//        return yamlMapper.writeValueAsString(listOf(this));
-//    }
-
     JsonIgnore
     fun getRequirementsYaml():String {
-        return roles.asYaml()
+        return roles.asSequence().map { it.asRequirement() }
+            .toList().asYaml()
     }
 }
 

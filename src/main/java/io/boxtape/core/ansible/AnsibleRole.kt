@@ -19,4 +19,10 @@ public data class AnsibleRole(
         args?.forEach { map.put(it.first, it.second) }
         return map
     }
+
+    fun asRequirement():Requirement {
+        return Requirement(name,src)
+    }
 }
+
+data class Requirement(val name:String, val src:String)

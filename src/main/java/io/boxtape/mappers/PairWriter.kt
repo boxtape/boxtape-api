@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.SerializerProvider
 class PairWriter : JsonSerializer<Pair<Any, Any>>() {
 
     override fun serialize(value: Pair<Any, Any>?, gen: JsonGenerator?, provider: SerializerProvider?) {
-        gen?.writeStringField(value?.first.toString(), value?.second.toString())
+        if (value == null) {
+            return
+        }
+        gen!!.writeObjectField(value.first.toString(), value.second)
     }
 
 }

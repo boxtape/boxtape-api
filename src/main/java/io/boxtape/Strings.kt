@@ -1,10 +1,7 @@
 package io.boxtape
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.google.common.base.Splitter
-import io.boxtape.yaml.PairWriter
+import io.boxtape.mappers.Mappers
 import org.apache.commons.lang3.text.StrLookup
 import org.apache.commons.lang3.text.StrSubstitutor
 import java.util.regex.Pattern
@@ -22,11 +19,10 @@ fun String.toKeyValueMap(keyValueSeperator: String = ":", itemSeperator: String 
 }
 
 fun Any.asYaml(): String {
-    val yamlMapper = ObjectMapper(YAMLFactory())
-    val module = SimpleModule()
-    module.addSerializer(javaClass<Pair<Any, Any>>(), PairWriter())
-    yamlMapper.registerModule(module)
-    return yamlMapper.writeValueAsString(this);
+    return Mappers.yamlMapper.writeValueAsString(this);
+}
+fun Any.asJson(): String {
+    return Mappers.jsonMapper.writeValueAsString(this);
 }
 
 fun String?.withPlaceholdersReplaced(replacements: Map<String, String>): String {
